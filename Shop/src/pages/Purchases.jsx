@@ -415,7 +415,7 @@ const Purchases = () => {
                       </div>
                       <div className="bg-white/70 rounded-2xl p-4 border border-green-200">
                         <div className="text-sm text-gray-600 mb-1">إجمالي الكاش باك</div>
-                        <div className="text-lg font-bold text-green-600">{customerStats.totalCashback.toFixed(2)} ريال</div>
+                        <div className="text-lg font-bold text-green-600">{selectedCustomer.cashbackBalance.toFixed(2)} ريال</div>
                       </div>
                       <div className="bg-white/70 rounded-2xl p-4 border border-green-200">
                         <div className="text-sm text-gray-600 mb-1">متوسط نسبة الكاش باك</div>
