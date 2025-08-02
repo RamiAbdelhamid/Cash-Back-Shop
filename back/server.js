@@ -38,11 +38,12 @@ app.get('/', (req, res) => {
 });
 // Serve static frontend
 // Serve static frontend
-app.use(express.static(path.join(__dirname, 'Shop', 'dist')));
+app.use(express.static(path.join(__dirname, '..', 'Shop', 'dist')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Shop', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'Shop', 'dist', 'index.html'));
 });
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
