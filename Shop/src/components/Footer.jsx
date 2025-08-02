@@ -27,13 +27,13 @@ const Footer = () => {
 
 
                                     <div className="flex items-center space-x-2 space-x-reverse">
-                                        <span className="text-green-400 font-medium">حسن منصور</span>
+                                        <span className="text-green-400 font-medium"> 07ASN.M@gmail.com</span>
                                         <span></span>
                                         <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"></div>
                                     </div>
 
                                     <div className="flex items-center space-x-2 space-x-reverse">
-                                        <span className="text-blue-400 font-medium">رامي عبد الحميد</span>
+                                        <span className="text-blue-400 font-medium">ramighassan10@gmail.com  </span>
                                         <span></span>
                                         <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
 
