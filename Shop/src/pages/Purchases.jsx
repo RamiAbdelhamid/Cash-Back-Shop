@@ -214,7 +214,7 @@ const Purchases = () => {
                 <p className="text-gray-600 text-lg">مرحباً {user.fullName} - تسجيل مشتريات العملاء</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
               <Link
                 to="/dashboard"
                 className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
@@ -227,7 +227,7 @@ const Purchases = () => {
               >
                 تسجيل الخروج
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 

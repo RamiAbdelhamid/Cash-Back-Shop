@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -17,7 +18,6 @@ const Navbar = () => {
     };
 
     checkAuth();
-    // التحقق من حالة تسجيل الدخول عند تغيير الصفحة
     window.addEventListener('storage', checkAuth);
     return () => window.removeEventListener('storage', checkAuth);
   }, []);
@@ -26,6 +26,11 @@ const Navbar = () => {
     logout();
     setIsLoggedIn(false);
     setUser(null);
+    setIsMenuOpen(false); // Close menu after logout
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -36,8 +41,8 @@ const Navbar = () => {
           كاش باك
         </Link>
 
-        {/* Navigation Links */}
-        <div className="flex items-center space-x-6 space-x-reverse">
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center space-x-6 space-x-reverse">
           {/* Public Links */}
           <NavLink
             to="/"
@@ -172,7 +177,136 @@ const Navbar = () => {
             </>
           )}
         </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button
+            onClick={toggleMenu}
+            className="text-gray-700 hover:text-blue-600 focus:outline-none"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white pt-4 pb-6 px-6 shadow-md">
+          <div className="flex flex-col space-y-4">
+            <NavLink
+              to="/"
+              onClick={toggleMenu}
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-lg transition-colors ${
+                  isActive 
+                    ? "text-blue-600 font-medium bg-blue-50" 
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                }`
+              }
+            >
+              الرئيسية
+            </NavLink>
+
+            {isLoggedIn ? (
+              <>
+                <NavLink
+                  to="/dashboard"
+                  onClick={toggleMenu}
+                  className={({ isActive }) =>
+                    `px-3 py-2 rounded-lg transition-colors ${
+                      isActive 
+                        ? "text-blue-600 font-medium bg-blue-50" 
+                        : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    }`
+                  }
+                >
+                  إدارة العملاء
+                </NavLink>
+
+                <NavLink
+                  to="/purchases"
+                  onClick={toggleMenu}
+                  className={({ isActive }) =>
+                    `px-3 py-2 rounded-lg transition-colors ${
+                      isActive 
+                        ? "text-blue-600 font-medium bg-blue-50" 
+                        : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    }`
+                  }
+                >
+                  إدارة المشتريات
+                </NavLink>
+
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="flex items-center space-x-3 space-x-reverse px-3 py-2">
+                    {user?.profileImage ? (
+                      <img 
+                        src={`https://cash-back-shop.onrender.com/${user.profileImage}`}
+                        alt={user?.fullName || 'المستخدم'}
+                        className="w-8 h-8 rounded-full object-cover border-2 border-blue-200"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <span 
+                      className={`w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-medium ${
+                        user?.profileImage ? 'hidden' : ''
+                      }`}
+                    >
+                      {user?.fullName?.charAt(0) || 'U'}
+                    </span>
+                    <span>{user?.fullName || 'المستخدم'}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-right px-3 py-2 mt-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    تسجيل الخروج
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/register"
+                  onClick={toggleMenu}
+                  className={({ isActive }) =>
+                    `px-3 py-2 rounded-lg transition-colors ${
+                      isActive 
+                        ? "text-blue-600 font-medium bg-blue-50" 
+                        : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    }`
+                  }
+                >
+                  إنشاء حساب
+                </NavLink>
+                
+                <NavLink
+                  to="/login"
+                  onClick={toggleMenu}
+                  className={({ isActive }) =>
+                    `px-4 py-2 text-center rounded-lg transition-colors ${
+                      isActive 
+                        ? "text-blue-600 font-medium bg-blue-50" 
+                        : "text-white bg-blue-600 hover:bg-blue-700"
+                    }`
+                  }
+                >
+                  تسجيل الدخول
+                </NavLink>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

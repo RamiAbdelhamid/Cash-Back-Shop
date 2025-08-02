@@ -175,7 +175,7 @@ const Dashboard = () => {
                 <p className="text-gray-600 text-lg">مرحباً {user.fullName} - إدارة عملاء متجرك</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
               <Link
                 to="/purchases"
                 className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
@@ -188,7 +188,7 @@ const Dashboard = () => {
               >
                 تسجيل الخروج
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
