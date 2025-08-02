@@ -5,6 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import fs from 'fs';
 import authRoutes from './routes/authRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import purchaseRoutes from './routes/purchaseRoutes.js';
@@ -34,11 +35,25 @@ app.use('/api/purchases', purchaseRoutes);
 app.get('/api/cashback/inquiry', getCashbackBalance);
 
 // Serve static files from React build
-app.use(express.static(path.join(__dirname, '../Shop/dist')));
+const reactBuildPath = path.join(__dirname, '../Shop/dist');
+app.use(express.static(reactBuildPath));
 
 // Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Shop/dist/index.html'));
+  const indexPath = path.join(reactBuildPath, 'index.html');
+  console.log('Looking for React build at:', reactBuildPath);
+  console.log('Looking for index.html at:', indexPath);
+  
+  // Check if the file exists
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error('React build not found. Please build the React app first.');
+    res.status(404).json({ 
+      error: 'React build not found. Please build the React app first.',
+      path: indexPath
+    });
+  }
 });
 
 // Error handling middleware

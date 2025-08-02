@@ -109,14 +109,20 @@ npm start
 1. **تحديث الخادم الخلفي** (`back/server.js`):
    - إضافة middleware لخدمة ملفات React الثابتة
    - إضافة route handler للتعامل مع جميع المسارات غير الموجودة
+   - إضافة فحص لوجود ملفات البناء
 
 2. **إضافة ملفات التكوين**:
    - `Shop/public/_redirects`: للتعامل مع مسارات React
    - `Shop/vercel.json`: للتوجيه الصحيح
+   - `Shop/netlify.toml`: كبديل إضافي
 
 3. **تحديث إعدادات Vite** (`Shop/vite.config.js`):
    - إضافة `historyApiFallback: true`
    - تكوين مجلد البناء
+
+4. **إضافة سكريبتات البناء**:
+   - `build.sh`: سكريبت شامل للبناء
+   - تحديث `package.json` مع سكريبتات البناء
 
 ## هيكل المشروع
 
