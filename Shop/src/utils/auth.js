@@ -40,7 +40,7 @@ export const createAuthAxios = () => {
   const token = getToken();
   
   const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: "https://cash-back-shop.onrender.com",
     headers: {
       'Content-Type': 'application/json',
     },

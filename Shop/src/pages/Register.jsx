@@ -72,7 +72,7 @@ const RegisterPage = () => {
                 formToSend.append('profileImage', formData.profileImage);
             }
 
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, formToSend, {
+            const response = await axios.post(`https://cash-back-shop.onrender.com/api/register`, formToSend, {
   headers: {
     'Content-Type': 'multipart/form-data',
   },

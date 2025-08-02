@@ -22,7 +22,7 @@ export default function CashBack() {
 
   const fetchStores = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/stores`);
+      const response = await axios.get(`https://cash-back-shop.onrender.com/api/stores`);
 
       setStores(response.data.stores);
     } catch (err) {
@@ -76,7 +76,7 @@ export default function CashBack() {
     setLoading(true);
     
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/cashback/inquiry`, {
+      const response = await axios.get(`https://cash-back-shop.onrender.com/api/cashback/inquiry`, {
   params: {
     storeId: formData.storeId,
     phoneNumber: cleanPhoneNumber
