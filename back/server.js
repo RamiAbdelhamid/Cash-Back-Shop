@@ -9,7 +9,7 @@ import authRoutes from './routes/authRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import purchaseRoutes from './routes/purchaseRoutes.js';
 import { getCashbackBalance } from './controllers/customerController.js';
-import path from 'path';
+
 
 dotenv.config();
 const app = express();
