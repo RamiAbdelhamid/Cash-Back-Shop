@@ -1,7 +1,0 @@
-buildCommand: npm run build
-startCommand: serve -s dist
-staticPublishPath: dist
-routes:
-  - type: rewrite
-    source: /.*   # catch all routes
-    destination: /index.html
