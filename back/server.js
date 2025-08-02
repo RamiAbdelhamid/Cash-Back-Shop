@@ -32,8 +32,13 @@ app.use('/api/purchases', purchaseRoutes);
 
 // Public route for cashback inquiry (no authentication required)
 app.get('/api/cashback/inquiry', getCashbackBalance);
-app.get('/', (req, res) => {
-  res.send('💰 Cashback API is running successfully');
+
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, '../Shop/dist')));
+
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Shop/dist/index.html'));
 });
 
 // Error handling middleware
