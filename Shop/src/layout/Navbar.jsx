@@ -88,7 +88,7 @@ const Navbar = () => {
                 <button className="flex items-center space-x-2 space-x-reverse px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">
                   {user?.profileImage ? (
                     <img 
-                      src={`http://localhost:5000/${user.profileImage}`}
+                      src={`https://cash-back-shop.onrender.com/${user.profileImage}`}
                       alt={user?.fullName || 'المستخدم'}
                       className="w-8 h-8 rounded-full object-cover border-2 border-blue-200"
                       onError={(e) => {
@@ -116,7 +116,7 @@ const Navbar = () => {
                     <div className="px-4 py-2 text-sm text-gray-600 border-b border-gray-100 flex items-center space-x-2 space-x-reverse">
                       {user?.profileImage ? (
                         <img 
-                          src={`http://localhost:5000/${user.profileImage}`}
+                          src={`https://cash-back-shop.onrender.com/${user.profileImage}`}
                           alt={user?.fullName || 'المستخدم'}
                           className="w-6 h-6 rounded-full object-cover border border-gray-200"
                           onError={(e) => {

@@ -156,7 +156,7 @@ const Dashboard = () => {
             <div className="flex items-center space-x-4 space-x-reverse">
               {user?.profileImage ? (
                 <img 
-                  src={`http://localhost:5000/${user.profileImage}`}
+                  src={`https://cash-back-shop.onrender.com/${user.profileImage}`}
                   alt={user?.fullName || 'المستخدم'}
                   className="w-16 h-16 rounded-2xl object-cover border-4 border-white shadow-lg"
                   onError={(e) => {
