@@ -53,7 +53,7 @@ const LoginPage = () => {
 
         setIsLoading(true);
         try {
-         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login`, formData);
+         const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, formData);
 
             
             if (response.data.success) {

@@ -22,7 +22,8 @@ export default function CashBack() {
 
   const fetchStores = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/stores');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/stores`);
+
       setStores(response.data.stores);
     } catch (err) {
       console.error('خطأ في جلب المتاجر:', err);
@@ -75,13 +76,12 @@ export default function CashBack() {
     setLoading(true);
     
     try {
-      const response = await axios.get('http://localhost:5000/api/cashback/inquiry', {
-        params: {
-          storeId: formData.storeId,
-          phoneNumber: cleanPhoneNumber
-        }
-      });
-
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/cashback/inquiry`, {
+  params: {
+    storeId: formData.storeId,
+    phoneNumber: cleanPhoneNumber
+  }
+});
       setResult({
         storeName: stores.find(store => store.id === formData.storeId)?.name || 'متجر غير معروف',
         phoneNumber: cleanPhoneNumber,
