@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import purchaseRoutes from './routes/purchaseRoutes.js';
 import { getCashbackBalance } from './controllers/customerController.js';
+import path from 'path';
 
 dotenv.config();
 const app = express();
@@ -34,6 +35,13 @@ app.use('/api/purchases', purchaseRoutes);
 app.get('/api/cashback/inquiry', getCashbackBalance);
 app.get('/', (req, res) => {
   res.send('💰 Cashback API is running successfully');
+});
+// Serve static frontend
+// Serve static frontend
+app.use(express.static(path.join(__dirname, 'Shop', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Shop', 'dist', 'index.html'));
 });
 
 // Error handling middleware
