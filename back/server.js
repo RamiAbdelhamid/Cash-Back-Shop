@@ -38,11 +38,14 @@ app.get('/', (req, res) => {
 });
 // Serve static frontend
 // Serve static frontend
-app.use(express.static(path.join(__dirname, '..', 'Shop', 'dist')));
+// أولًا: تقديم ملفات React
+app.use(express.static(path.join(__dirname, '../Shop/dist')));
 
+// ثانيًا: أي طلب غير API يرجع index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'Shop', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../Shop/dist/index.html'));
 });
+
 
 
 // Error handling middleware
