@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await authAxios.get('/customers');
+      const response = await authAxios.get('https://cash-back-shop.onrender.com/api/customers');
       setCustomers(response.data.customers);
     } catch (err) {
       console.error('خطأ في جلب العملاء:', err);
@@ -59,13 +59,13 @@ const Dashboard = () => {
     try {
       if (editingCustomer) {
         // تحديث العميل (فقط الاسم)
-        await authAxios.put(`/customers/${editingCustomer._id}`, {
+        await authAxios.put(`https://cash-back-shop.onrender.com/api/customers/${editingCustomer._id}`, {
           name: formData.name
         });
         setMessage('تم تحديث بيانات العميل بنجاح');
       } else {
         // إضافة عميل جديد
-        await authAxios.post('/customers', formData);
+        await authAxios.post('https://cash-back-shop.onrender.com/api/customers', formData);
         setMessage('تم إضافة العميل بنجاح');
       }
 
@@ -94,7 +94,7 @@ const Dashboard = () => {
     }
 
     try {
-      await authAxios.delete(`/customers/${customerId}`);
+      await authAxios.delete(`https://cash-back-shop.onrender.com/api/customers/${customerId}`);
       setMessage('تم حذف العميل بنجاح');
       fetchCustomers();
     } catch (err) {
@@ -120,7 +120,7 @@ const Dashboard = () => {
     }
 
     try {
-      const response = await authAxios.get(`/customers/search?phoneNumber=${searchPhone}`);
+      const response = await authAxios.get(`https://cash-back-shop.onrender.com/api/customers/search?phoneNumber=${searchPhone}`);
       setCustomers([response.data.customer]);
       
       // التمرير السلس إلى قائمة العملاء بعد البحث

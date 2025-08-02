@@ -38,7 +38,7 @@ const Purchases = () => {
 
   const fetchPurchases = async () => {
     try {
-      const response = await authAxios.get('/purchases');
+      const response = await authAxios.get('https://cash-back-shop.onrender.com/api/purchases');
       setPurchases(response.data.purchases);
     } catch (err) {
       console.error('خطأ في جلب المشتريات:', err);
@@ -50,7 +50,7 @@ const Purchases = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await authAxios.get('/purchases/stats');
+      const response = await authAxios.get('https://cash-back-shop.onrender.com/api/purchases/stats');
       setStats(response.data.stats);
     } catch (err) {
       console.error('خطأ في جلب الإحصائيات:', err);
@@ -88,11 +88,11 @@ const Purchases = () => {
     setCustomerStats(null);
 
     try {
-      const response = await authAxios.get(`/customers/search?phoneNumber=${formData.customerPhone}`);
+      const response = await authAxios.get(`https://cash-back-shop.onrender.com/api/customers/search?phoneNumber=${formData.customerPhone}`);
       setSelectedCustomer(response.data.customer);
       
       // جلب إحصائيات العميل
-      const statsResponse = await authAxios.get(`/purchases/customer-stats?customerPhone=${formData.customerPhone}`);
+      const statsResponse = await authAxios.get(`https://cash-back-shop.onrender.com/api/purchases/customer-stats?customerPhone=${formData.customerPhone}`);
       setCustomerStats(statsResponse.data.customerStats);
       
       setMessage('تم العثور على العميل بنجاح');
@@ -144,7 +144,7 @@ const Purchases = () => {
 
       };
 
-      const response = await authAxios.post('/purchases', purchaseData);
+      const response = await authAxios.post('https://cash-back-shop.onrender.com/api/purchases', purchaseData);
       
       if (response.data.success) {
         setMessage('تم تسجيل عملية الشراء بنجاح');
