@@ -157,14 +157,24 @@ export const getProfile = async (req, res) => {
 // Get all stores (users) for cashback inquiry
 export const getAllStores = async (req, res) => {
   try {
-    const stores = await User.find({}).select('fullName _id').sort({ fullName: 1 });
+    const stores = await User.find({}).select('fullName _id profileImage').sort({ fullName: 1 });
+    
+    console.log('البيانات من قاعدة البيانات:', stores);
+    console.log('مثال على متجر واحد:', stores[0]);
+    
+    const mappedStores = stores.map(store => ({
+      id: store._id,
+      name: store.fullName,
+      image: store.profileImage,
+      profileImage: store.profileImage
+    }));
+    
+    console.log('البيانات بعد المعالجة:', mappedStores);
+    console.log('مثال على متجر بعد المعالجة:', mappedStores[0]);
     
     res.status(200).json({
       success: true,
-      stores: stores.map(store => ({
-        id: store._id,
-        name: store.fullName
-      }))
+      stores: mappedStores
     });
   } catch (err) {
     console.error('Get stores error:', err);
