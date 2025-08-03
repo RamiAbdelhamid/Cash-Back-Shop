@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-export default function CashBack() {
+export default function Cashform() {
   const [formData, setFormData] = useState({
     storeId: '',
     phoneNumber: ''
@@ -215,17 +215,11 @@ const getImageUrl = (imagePath) => {
       <div className="max-w-4xl mx-auto p-6">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
-            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-            </svg>
-          </div>
+        
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 p-3">
             صفحة استعلام الكاش باك
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            تتيح للعملاء معرفة رصيد الكاش باك المرتبط برقم هاتفهم لدى متجر محدد
-          </p>
+        
         </div>
 
         {/* Query Form */}
@@ -489,38 +483,7 @@ const getImageUrl = (imagePath) => {
           </div>
         )}
 
-        {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 mt-35 ">
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 text-center border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-3">كاش باك فوري</h3>
-            <p className="text-gray-600">احصل على كاش باك فوري على مشترياتك من المتاجر المسجلة</p>
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 text-center border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-6">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-3">متاجر متعددة</h3>
-            <p className="text-gray-600">استفد من كاش باك في العديد من المتاجر المسجلة في النظام</p>
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 text-center border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full mb-6">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-3">استعلام سريع</h3>
-            <p className="text-gray-600">استعلم عن رصيدك بسهولة وسرعة من خلال رقم هاتفك</p>
-          </div>
-        </div>
+ 
       </div>
     </div>
   );

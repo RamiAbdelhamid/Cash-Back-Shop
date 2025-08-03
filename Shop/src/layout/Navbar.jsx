@@ -56,6 +56,18 @@ const Navbar = () => {
           >
             الرئيسية
           </NavLink>
+          <NavLink
+            to="/cashform"
+            className={({ isActive }) =>
+              `px-3 py-2 rounded-lg transition-colors ${
+                isActive 
+                  ? "text-blue-600 font-medium bg-blue-50" 
+                  : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+              }`
+            }
+          >
+            صفحة الإستعلام
+          </NavLink>
 
           {/* Conditional Links based on Auth Status */}
           {isLoggedIn ? (
@@ -211,6 +223,19 @@ const Navbar = () => {
               }
             >
               الرئيسية
+            </NavLink>
+            <NavLink
+              to="/cashform"
+              onClick={toggleMenu}
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-lg transition-colors ${
+                  isActive 
+                    ? "text-blue-600 font-medium bg-blue-50" 
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                }`
+              }
+            >
+          صفحة الإستعلام
             </NavLink>
 
             {isLoggedIn ? (

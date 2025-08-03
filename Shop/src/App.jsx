@@ -7,7 +7,7 @@ import Register from './pages/Register.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Purchases from './pages/Purchases.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-
+import Cashform from './pages/Cashform.jsx';
 function App() {
   return (
     <Router>
@@ -48,6 +48,8 @@ function App() {
           {/* Pages without Navbar and Footer */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/cashform"  element= {<Cashform/>}/>
+
         </Routes>
       </div>
     </Router>
