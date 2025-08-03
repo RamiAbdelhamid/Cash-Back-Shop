@@ -134,18 +134,6 @@ const LoginPage = () => {
                         )}
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <label className="flex items-center">
-                            <input
-                                type="checkbox"
-                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                            />
-                            <span className="ml-2 text-sm text-gray-600">تذكرني</span>
-                        </label>
-                        <a href="#" className="text-sm text-blue-600 hover:underline">
-                            نسيت كلمة المرور؟
-                        </a>
-                    </div>
 
                     <button
                         type="submit"
