@@ -14,17 +14,57 @@ export default function CashBack() {
   
   // مرجع لمربع النتائج للتمرير السلس
   const resultRef = useRef(null);
+  
+  // مرجع لقائمة المتاجر
+  const storesDropdownRef = useRef(null);
+  const [showStoresDropdown, setShowStoresDropdown] = useState(false);
+  const [imageErrors, setImageErrors] = useState(new Set());
+  const [loadingImages, setLoadingImages] = useState(new Set());
 
   // جلب المتاجر من قاعدة البيانات
   useEffect(() => {
     fetchStores();
   }, []);
 
+  // إغلاق القائمة المنسدلة عند النقر خارجها
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (storesDropdownRef.current && !storesDropdownRef.current.contains(event.target)) {
+        setShowStoresDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const fetchStores = async () => {
     try {
       const response = await axios.get(`https://cash-back-shop.onrender.com/api/stores`);
-
+      console.log('بيانات المتاجر:', response.data.stores); // للتأكد من البيانات
+      console.log('مثال على بيانات متجر:', response.data.stores[0]); // لعرض هيكل البيانات
+      
+      // طباعة profileImage لكل متجر
+      response.data.stores.forEach((store, index) => {
+        console.log(`المتجر ${index + 1}:`, {
+          name: store.name,
+          id: store.id,
+          image: store.image,
+          profileImage: store.profileImage
+        });
+      });
+      
       setStores(response.data.stores);
+      
+      // بدء تحميل الصور - يمكن استخدام image أو profileImage
+      const storesWithImages = response.data.stores.filter(store => 
+        (store.image && store.image.trim() !== '') || 
+        (store.profileImage && store.profileImage.trim() !== '')
+      );
+      const imageUrls = storesWithImages.map(store => store.image || store.profileImage);
+      setLoadingImages(new Set(imageUrls));
     } catch (err) {
       console.error('خطأ في جلب المتاجر:', err);
       setMessage('فشل في جلب قائمة المتاجر');
@@ -39,6 +79,40 @@ export default function CashBack() {
       ...prev,
       [name]: value
     }));
+  };
+
+  // دالة لاختيار المتجر من القائمة المنسدلة
+  const handleStoreSelect = (store) => {
+    setFormData(prev => ({
+      ...prev,
+      storeId: store.id
+    }));
+    setShowStoresDropdown(false);
+    
+    // إضافة صورة المتجر المختار إلى قائمة التحميل إذا لم تكن موجودة
+    const storeImage = getStoreImage(store);
+    if (storeImage && storeImage.trim() !== '' && !imageErrors.has(storeImage)) {
+      setLoadingImages(prev => new Set([...prev, storeImage]));
+    }
+  };
+
+  // دالة لمعالجة أخطاء تحميل الصور
+  const handleImageError = (imageName) => {
+    setImageErrors(prev => new Set([...prev, imageName]));
+    setLoadingImages(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(imageName);
+      return newSet;
+    });
+  };
+
+  // دالة لمعالجة نجاح تحميل الصور
+  const handleImageLoad = (imageName) => {
+    setLoadingImages(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(imageName);
+      return newSet;
+    });
   };
 
   // دالة للتمرير السلس إلى النتائج
@@ -82,12 +156,20 @@ export default function CashBack() {
     phoneNumber: cleanPhoneNumber
   }
 });
+      const selectedStore = stores.find(store => store.id === formData.storeId);
       setResult({
-        storeName: stores.find(store => store.id === formData.storeId)?.name || 'متجر غير معروف',
+        storeName: selectedStore?.name || 'متجر غير معروف',
+        storeImage: getStoreImage(selectedStore),
         phoneNumber: cleanPhoneNumber,
         balance: response.data.data.balance,
         customerName: response.data.data.customerName
       });
+      
+      // إضافة صورة المتجر إلى قائمة التحميل إذا لم تكن موجودة
+      const storeImage = getStoreImage(selectedStore);
+      if (storeImage && storeImage.trim() !== '' && !imageErrors.has(storeImage)) {
+        setLoadingImages(prev => new Set([...prev, storeImage]));
+      }
       
       // رسالة نجاح
       setMessage('تم العثور على رصيد الكاش باك بنجاح');
@@ -105,6 +187,24 @@ export default function CashBack() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // دالة لتنظيف سلسلة الصورة (إزالة المسافات الزائدة أو الرموز)
+  const cleanImagePath = (path) => {
+    if (!path) return '';
+    return path.trim().replace(/\s+/g, ' ').replace(/[^\w.-]/g, '');
+  };
+
+  // دالة لبناء URL الصورة
+  const getImageUrl = (imagePath) => {
+    const cleanedPath = cleanImagePath(imagePath);
+    if (!cleanedPath) return '';
+    return `https://cash-back-shop.onrender.com/uploads/${cleanedPath}`;
+  };
+
+  // دالة للحصول على صورة المتجر (تدعم كلا الحقلين)
+  const getStoreImage = (store) => {
+    return store?.image || store?.profileImage || '';
   };
 
   return (
@@ -148,27 +248,108 @@ export default function CashBack() {
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   اختيار اسم المتجر من قائمة (إجباري)
                 </label>
-                <div className="relative">
-                  <select
-                    name="storeId"
-                    value={formData.storeId}
-                    onChange={handleChange}
-                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/50 backdrop-blur-sm"
-                    required
+                <div className="relative" ref={storesDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setShowStoresDropdown(!showStoresDropdown)}
                     disabled={storesLoading}
+                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 bg-white/50 backdrop-blur-sm text-right flex items-center justify-between"
                   >
-                    <option value="">
-                      {storesLoading ? 'جاري تحميل المتاجر...' : 'اختر اسم المتجر'}
-                    </option>
-                    {stores.map((store) => (
-                      <option key={store.id} value={store.id}>
-                        {store.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                 
-                  </div>
+                    <span className="flex items-center space-x-3 space-x-reverse">
+                      {formData.storeId ? (
+                        <>
+                          {(() => {
+                            const selectedStore = stores.find(store => store.id === formData.storeId);
+                            const storeImage = getStoreImage(selectedStore);
+                            return storeImage && storeImage.trim() !== '' && !imageErrors.has(storeImage) ? (
+                              <div className="relative">
+                                {loadingImages.has(storeImage) && (
+                                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-500"></div>
+                                  </div>
+                                )}
+                                <img 
+                                  src={getImageUrl(storeImage)}
+                                  alt="صورة المتجر"
+                                  className={`w-8 h-8 rounded-full object-cover border-2 border-gray-200 ${loadingImages.has(storeImage) ? 'hidden' : ''}`}
+                                  onError={() => handleImageError(storeImage)}
+                                  onLoad={() => handleImageLoad(storeImage)}
+                                />
+                              </div>
+                            ) : (
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                              </div>
+                            );
+                          })()}
+                          <span>{stores.find(store => store.id === formData.storeId)?.name || 'متجر غير معروف'}</span>
+                        </>
+                      ) : (
+                        <span className="text-gray-500">
+                          {storesLoading ? 'جاري تحميل المتاجر...' : 'اختر اسم المتجر'}
+                        </span>
+                      )}
+                    </span>
+                    <svg className="w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* قائمة المتاجر المنسدلة */}
+                  {showStoresDropdown && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-sm border-2 border-gray-200 rounded-2xl shadow-2xl z-50 max-h-60 overflow-y-auto">
+                      {storesLoading ? (
+                        <div className="p-4 text-center text-gray-500">
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                          جاري تحميل المتاجر...
+                        </div>
+                      ) : stores.length === 0 ? (
+                        <div className="p-4 text-center text-gray-500">
+                          لا توجد متاجر متاحة
+                        </div>
+                      ) : (
+                        stores.map((store) => (
+                          <button
+                            key={store.id}
+                            type="button"
+                            onClick={() => handleStoreSelect(store)}
+                            className="w-full p-4 text-right hover:bg-blue-50/80 transition-colors duration-200 flex items-center space-x-3 space-x-reverse border-b border-gray-100 last:border-b-0"
+                          >
+                            <div className="flex items-center space-x-3 space-x-reverse flex-1">
+                              {(() => {
+                                const storeImage = getStoreImage(store);
+                                return storeImage && storeImage.trim() !== '' && !imageErrors.has(storeImage) ? (
+                                  <div className="relative">
+                                    {loadingImages.has(storeImage) && (
+                                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                                      </div>
+                                    )}
+                                    <img 
+                                      src={getImageUrl(storeImage)}
+                                      alt={`صورة ${store.name}`}
+                                      className={`w-10 h-10 rounded-full object-cover border-2 border-gray-200 ${loadingImages.has(storeImage) ? 'hidden' : ''}`}
+                                      onError={() => handleImageError(storeImage)}
+                                      onLoad={() => handleImageLoad(storeImage)}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                  </div>
+                                );
+                              })()}
+                              <span className="font-medium text-gray-800">{store.name}</span>
+                            </div>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -237,11 +418,39 @@ export default function CashBack() {
             </div>
             
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-3xl p-8">
-              <div className="grid md:grid-cols-3 gap-6 text-center">
-                <div className="space-y-2">
-                  <div className="text-sm text-gray-600 font-medium">المتجر</div>
-                  <div className="text-lg font-bold text-gray-800 bg-white/50 rounded-xl p-3">{result.storeName}</div>
+              {/* معلومات المتجر مع الصورة */}
+              <div className="mb-6 p-4 bg-white/70 rounded-2xl">
+                <div className="flex items-center justify-center space-x-4 space-x-reverse">
+                  {result.storeImage && result.storeImage.trim() !== '' && !imageErrors.has(result.storeImage) ? (
+                    <>
+                      {loadingImages.has(result.storeImage) && (
+                        <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center border-4 border-white shadow-lg">
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                        </div>
+                      )}
+                      <img 
+                        src={`https://cash-back-shop.onrender.com/uploads/${result.storeImage}`}
+                        alt="صورة المتجر"
+                        className={`w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg ${loadingImages.has(result.storeImage) ? 'hidden' : ''}`}
+                        onError={() => handleImageError(result.storeImage)}
+                        onLoad={() => handleImageLoad(result.storeImage)}
+                      />
+                    </>
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center border-4 border-white shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="text-center">
+                    <div className="text-sm text-gray-600 font-medium">المتجر</div>
+                    <div className="text-xl font-bold text-gray-800">{result.storeName}</div>
+                  </div>
                 </div>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6 text-center">
                 <div className="space-y-2">
                   <div className="text-sm text-gray-600 font-medium">رقم الهاتف</div>
                   <div className="text-lg font-bold text-gray-800 bg-white/50 rounded-xl p-3">{result.phoneNumber}</div>
